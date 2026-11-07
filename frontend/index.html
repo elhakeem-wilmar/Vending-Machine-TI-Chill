@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vending Machine TI-Chill</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: '#0a1680',
+            sky: '#93b2f8',
+            butter: '#fbedb0',
+            amber: '#f1b94c',
+            cream: '#fcfdff',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes dropBounce {
+      0% { transform: translateY(-140px); opacity: 0; }
+      55% { transform: translateY(6px); opacity: 1; }
+      75% { transform: translateY(-3px); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-drop-bounce { animation: dropBounce 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex justify-center">
+
+  <!-- Mobile-First App Wrapper (Perfect for Smartphone Scan QR) -->
+  <div class="w-full max-w-md min-h-screen bg-white sm:shadow-xl sm:border-x sm:border-slate-200 flex flex-col relative no-scrollbar">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-200 opacity-0 -translate-y-3 w-11/12 max-w-xs text-center">
+      <div id="toast-msg" class="bg-ocean text-white font-medium text-xs py-2.5 px-4 rounded-xl shadow-xl border border-sky/30"></div>
+    </div>
+
+    <!-- HEADER KIOSK -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3">
+      <div class="flex items-center justify-between">
+        
+        <!-- Logo Kelas & Brand -->
+        <div class="flex items-center gap-2.5">
+          <img src="/logo.png" alt="Logo Kelas" class="h-8 w-auto object-contain" onerror="this.style.display='none'; document.getElementById('header-class-badge').style.display='inline-flex';" />
+          <span id="header-class-badge" class="px-2.5 py-0.5 rounded-lg bg-ocean/10 text-ocean font-extrabold text-xs tracking-tight">TI-Chill</span>
+          <div class="h-4 w-px bg-slate-200"></div>
+          <div>
+            <h1 class="text-sm font-extrabold text-ocean tracking-tight leading-none">Vending Machine TI-Chill</h1>
+          </div>
+        </div>
+
+        <!-- Status Kiosk -->
+        <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-100">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Online</span>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN PRODUCT CATALOGUE -->
+    <main class="px-4 pt-3 pb-32 flex-1">
+      
+      <!-- Compact Info Banner -->
+      <div class="bg-ocean text-white rounded-2xl p-4 mb-4 relative overflow-hidden shadow-xs">
+        <div class="relative z-10">
+          <span class="inline-block px-2 py-0.5 rounded-md bg-amber text-ocean text-[9px] font-black uppercase tracking-wider mb-1.5">
+            Siap Minum
+          </span>
+          <h2 class="text-base font-extrabold leading-tight mb-1">Pilih Minuman Anda</h2>
+          <p class="text-[11px] text-sky leading-snug">Pilih 1 minuman untuk dikeluarkan otomatis oleh mesin vending.</p>
+        </div>
+      </div>
+
+      <!-- Clean Category Filter Tabs -->
+      <div class="flex items-center gap-2 mb-3.5 overflow-x-auto no-scrollbar pb-1">
+        <button onclick="setCategory('all')" id="cat-all" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold transition bg-ocean text-white shrink-0">
+          Semua
+        </button>
+        <button onclick="setCategory('Kopi')" id="cat-Kopi" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0">
+          Kopi
+        </button>
+        <button onclick="setCategory('Susu')" id="cat-Susu" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0">
+          Susu
+        </button>
+        <button onclick="setCategory('Teh')" id="cat-Teh" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0">
+          Teh
+        </button>
+      </div>
+
+      <!-- Products Grid (Shelf Display) -->
+      <div id="product-grid" class="grid grid-cols-2 gap-3">
+        <!-- Skeleton Loaders -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 animate-pulse h-56"></div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 animate-pulse h-56"></div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden text-center py-12 text-slate-400">
+        <p class="text-xs font-semibold">Tidak ada produk di kategori ini</p>
+      </div>
+
+    </main>
+
+    <!-- MOBILE-OPTIMIZED STICKY CART BAR -->
+    <div id="cart-bar" class="fixed bottom-0 inset-x-0 sm:max-w-md sm:mx-auto z-40 transition-all duration-300 translate-y-full px-4 pb-4 pointer-events-none">
+      <div class="bg-ocean text-white rounded-2xl p-3 shadow-2xl flex items-center justify-between border border-sky/20 pointer-events-auto">
+        <div class="flex items-center gap-2.5 pl-1">
+          <div class="w-8 h-8 rounded-lg bg-amber/20 border border-amber/40 flex items-center justify-center font-extrabold text-amber text-xs">
+            <span id="cart-count">0</span>
+          </div>
+          <div>
+            <p class="text-[10px] text-sky leading-none mb-0.5">Total</p>
+            <p id="cart-total" class="text-sm font-extrabold text-white leading-tight">Rp 0</p>
+          </div>
+        </div>
+        <button id="checkout-btn" onclick="openPayment()" class="bg-amber text-ocean font-extrabold rounded-xl px-4 py-2.5 text-xs hover:bg-amber/90 active:scale-95 transition flex items-center gap-1.5 shadow-sm">
+          <span>Bayar Sekarang</span>
+          <span class="text-sm leading-none">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DISPENSING CHAMBER OVERLAY (Step 5) -->
+    <div id="dispense-screen" class="fixed inset-0 z-50 bg-ocean/98 backdrop-blur-md text-white hidden flex-col items-center justify-center p-6">
+      <div class="text-center w-full max-w-xs mx-auto">
+        
+        <div class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full px-3.5 py-1 text-xs font-bold mb-3">
+          <span>✓ Pembayaran Terkonfirmasi</span>
+        </div>
+
+        <h2 id="dispense-title" class="text-xl font-black mb-1">Mengeluarkan Minuman...</h2>
+        <p id="dispense-subtitle" class="text-xs text-sky mb-5">Pesanan Anda sedang dijatuhkan ke slot</p>
+
+        <!-- Physical Vending Chamber Slot -->
+        <div class="bg-slate-900 border-2 border-sky/30 rounded-2xl p-4 min-h-[200px] flex flex-col justify-end gap-2 relative overflow-hidden shadow-inner">
+          <div class="absolute top-0 inset-x-0 h-5 bg-gradient-to-b from-sky/20 to-transparent"></div>
+          <div class="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-mono text-sky/60 uppercase tracking-widest font-semibold">
+            [ SLOT PENGAMBILAN ]
+          </div>
+          <div id="dispense-slot" class="flex flex-col gap-2 relative z-10"></div>
+        </div>
+
+        <!-- Action Button after completion -->
+        <div id="dispense-actions" class="hidden mt-5 animate-slide-up">
+          <p class="text-xs font-semibold text-emerald-300 mb-2.5">Silakan ambil minuman Anda</p>
+          <button onclick="resetApp()" class="w-full bg-amber text-ocean font-extrabold rounded-xl py-3 text-xs hover:bg-amber/90 active:scale-95 transition shadow-md">
+            Selesai & Ambil Minuman
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CLEAN FOOTER -->
+    <footer class="mt-auto border-t border-slate-100 py-3.5 px-4 text-center text-[10px] text-slate-400">
+      <div class="flex items-center justify-between">
+        <span>SmartVending • TI-Chill</span>
+        <a href="/admin" class="hover:text-ocean transition text-slate-400 font-medium">
+          Admin
+        </a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // ── Application State ──
+    let products = [];
+    const cart = {};
+    let activeCategory = 'all';
+
+    const fmt = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n).replace('IDR', 'Rp').replace(/\s+/g, ' ').trim();
+    const txId = () => "TRX-" + Date.now().toString(36).toUpperCase();
+    const $ = (id) => document.getElementById(id);
+
+    function showToast(msg) {
+      const t = $('toast');
+      $('toast-msg').textContent = msg;
+      t.classList.remove('opacity-0', '-translate-y-3');
+      t.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        t.classList.remove('opacity-100', 'translate-y-0');
+        t.classList.add('opacity-0', '-translate-y-3');
+      }, 2000);
+    }
+
+    // ── Midtrans Snap Setup ──
+    async function initMidtrans() {
+      try {
+        const res = await fetch('/api/config');
+        if (!res.ok) return;
+        const config = await res.json();
+        if (config.clientKey && !document.getElementById('midtrans-snap-script')) {
+          const script = document.createElement('script');
+          script.id = 'midtrans-snap-script';
+          script.src = config.snapUrl;
+          script.setAttribute('data-client-key', config.clientKey);
+          document.head.appendChild(script);
+        }
+      } catch (err) {
+        console.warn('Gagal memuat konfigurasi Midtrans:', err);
+      }
+    }
+
+    // ── Fetch Products from Server ──
+    async function fetchProducts() {
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          products = await res.json();
+          renderGrid();
+          updateCartBar();
+        }
+      } catch (err) {
+        showToast('Gagal memuat produk dari mesin');
+      }
+    }
+
+    // ── Category Filter ──
+    function setCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.className = 'cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0';
+      });
+      const activeBtn = $(`cat-${cat}`);
+      if (activeBtn) {
+        activeBtn.className = 'cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold transition bg-ocean text-white shrink-0';
+      }
+      renderGrid();
+    }
+
+    // ── Render Products Grid ──
+    function renderGrid() {
+      const grid = $('product-grid');
+      const empty = $('empty-state');
+      
+      const filtered = activeCategory === 'all'
+        ? products
+        : products.filter(p => p.category === activeCategory);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(p => {
+        const qty = cart[p.id] || 0;
+        const isOutOfStock = p.stock === 0;
+        const isLow = p.stock > 0 && p.stock <= 2;
+        const isSelected = qty > 0;
+
+        return `
+          <div class="relative bg-white rounded-2xl p-3 border transition-all duration-150 flex flex-col justify-between ${isSelected ? 'border-amber ring-2 ring-amber/20 shadow-sm' : 'border-slate-200/90 shadow-xs'} ${isOutOfStock ? 'opacity-50' : ''}">
+            
+            ${isOutOfStock ? `
+              <div class="absolute inset-0 bg-white/75 backdrop-blur-[1px] rounded-2xl z-20 flex items-center justify-center">
+                <span class="bg-slate-800 text-white font-bold text-[10px] px-3 py-1 rounded-full shadow-sm">Habis</span>
+              </div>
+            ` : ''}
+
+            <!-- Tags -->
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[9px] font-semibold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
+                ${p.volume || '250ml'}
+              </span>
+              ${isLow ? `
+                <span class="text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">
+                  Sisa ${p.stock}
+                </span>
+              ` : `
+                <span class="text-[9px] font-medium text-slate-400">
+                  Stok: ${p.stock}
+                </span>
+              `}
+            </div>
+
+            <!-- Product Emoji Container -->
+            <div class="w-full h-20 rounded-xl bg-butter/30 flex items-center justify-center mb-2">
+              <span class="text-4xl select-none leading-none">${p.emoji}</span>
+            </div>
+
+            <!-- Title & Price -->
+            <div class="mb-2.5">
+              <span class="text-[9px] font-bold text-sky-700 uppercase tracking-wide block leading-none mb-1">${p.category}</span>
+              <h3 class="font-bold text-ocean text-xs leading-tight line-clamp-1 mb-1">${p.name}</h3>
+              <p class="text-ocean font-extrabold text-sm leading-none">${fmt(p.price)}</p>
+            </div>
+
+            <!-- Tombol Pilih: 1 Minuman per Transaksi -->
+            <div class="pt-2 border-t border-slate-100 ${isOutOfStock ? 'pointer-events-none' : ''}">
+              ${isOutOfStock ? `
+                <button disabled class="w-full py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-300 cursor-not-allowed">
+                  Habis
+                </button>
+              ` : `
+                <button onclick="selectProduct('${p.id}')" class="w-full py-2 rounded-xl text-xs font-extrabold transition-all ${isSelected ? 'bg-amber text-ocean active:scale-95 shadow-xs flex items-center justify-center gap-1' : 'bg-ocean hover:bg-ocean/90 text-white active:scale-95 shadow-xs'}">
+                  ${isSelected ? '✓ Terpilih <span class="text-[10px] font-normal opacity-75">(Batal)</span>' : 'Pilih Minuman'}
+                </button>
+              `}
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── Cart State Logic (Aturan: Maksimal 1 Item per Transaksi) ──
+    function selectProduct(id) {
+      const p = products.find(x => x.id === id);
+      if (!p || p.stock <= 0) return;
+
+      if (cart[id]) {
+        // Klik ulang pada produk yang terpilih -> batalkan pilihan
+        delete cart[id];
+      } else {
+        // Ganti pilihan ke minuman ini (kosongkan keranjang sebelumnya)
+        Object.keys(cart).forEach(k => delete cart[k]);
+        cart[id] = 1;
+      }
+
+      renderGrid();
+      updateCartBar();
+    }
+
+    function changeQty(id, delta) {
+      selectProduct(id);
+    }
+
+    function cartItems() {
+      return Object.entries(cart).map(([id, qty]) => {
+        const p = products.find(x => x.id === id);
+        return { ...p, qty };
+      });
+    }
+
+    function updateCartBar() {
+      const items = cartItems();
+      const count = items.reduce((s, i) => s + i.qty, 0);
+      const total = items.reduce((s, i) => s + i.qty * i.price, 0);
+
+      $('cart-count').textContent = count;
+      $('cart-total').textContent = fmt(total);
+
+      const bar = $('cart-bar');
+      if (count > 0) {
+        bar.classList.remove('translate-y-full');
+        bar.classList.add('translate-y-0');
+      } else {
+        bar.classList.add('translate-y-full');
+        bar.classList.remove('translate-y-0');
+      }
+    }
+
+    // ── Payment with Midtrans Snap ──
+    async function openPayment() {
+      const items = cartItems();
+      if (items.length === 0) return;
+      const total = items.reduce((s, i) => s + i.qty * i.price, 0);
+
+      const btn = $('checkout-btn');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `Memproses...`;
+
+      try {
+        const orderId = txId();
+
+        const response = await fetch('/api/payment/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: orderId,
+            items: items.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
+            grossAmount: total,
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Gagal membuat transaksi');
+        }
+
+        if (window.snap && data.token) {
+          window.snap.pay(data.token, {
+            onSuccess: async function (result) {
+              showToast('Pembayaran berhasil!');
+              
+              try {
+                await fetch('/api/payment/complete', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    orderId: orderId,
+                    items: items.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
+                    grossAmount: total,
+                    paymentType: result.payment_type || 'QRIS'
+                  })
+                });
+              } catch (saveErr) {
+                console.error('Gagal mencatat transaksi:', saveErr);
+              }
+
+              startDispensing();
+            },
+            onPending: async function (result) {
+              // Transaksi berstatus pending di sistem Midtrans (menunggu transfer)
+              console.log('[Midtrans Pending]', result);
+            },
+            onError: function (result) {
+              showToast('Pembayaran gagal atau ditolak');
+            },
+            onClose: async function () {
+              // Cek apakah pembeli sebenarnya sudah membayar sebelum menutup pop-up
+              try {
+                const checkRes = await fetch(`/api/payment/check-status/${orderId}`);
+                if (checkRes.ok) {
+                  const checkData = await checkRes.json();
+                  if (checkData.settled) {
+                    showToast('Pembayaran terdeteksi lunas! 🎉');
+                    startDispensing();
+                    return;
+                  }
+                }
+              } catch (e) {}
+              showToast('Pembayaran dibatalkan');
+            }
+          });
+        } else {
+          throw new Error('Snap belum siap. Periksa koneksi server.');
+        }
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+
+    // ── Dispensing Animation ──
+    function startDispensing(customItems = null) {
+      const items = (customItems && customItems.length > 0) ? customItems : cartItems();
+      const screen = $('dispense-screen');
+      screen.classList.remove('hidden');
+      screen.classList.add('flex');
+
+      $('dispense-title').textContent = 'Mengeluarkan Minuman...';
+      $('dispense-subtitle').textContent = 'Pesanan Anda sedang dijatuhkan ke slot';
+      $('dispense-actions').classList.add('hidden');
+
+      const slot = $('dispense-slot');
+      slot.innerHTML = '';
+
+      const units = [];
+      items.forEach(i => {
+        const count = i.qty || i.quantity || 1;
+        for (let n = 0; n < count; n++) units.push(i);
+      });
+
+      units.forEach((item, idx) => {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'bg-white/10 backdrop-blur-md border border-sky/30 rounded-xl px-3 py-2 flex items-center justify-between animate-drop-bounce shadow-xs';
+          el.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">${item.emoji || '🥤'}</span>
+              <div>
+                <p class="font-bold text-xs text-white leading-tight">${item.name || 'Minuman'}</p>
+                <p class="text-[9px] text-sky leading-none mt-0.5">${item.volume || '250ml'}</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono font-bold text-amber">KELUAR ✓</span>
+          `;
+          slot.appendChild(el);
+        }, idx * 800);
+      });
+
+      setTimeout(() => {
+        $('dispense-title').textContent = 'Selesai!';
+        $('dispense-subtitle').textContent = 'Semua pesanan telah dikeluarkan';
+        $('dispense-actions').classList.remove('hidden');
+      }, Math.max(1, units.length) * 800 + 400);
+    }
+
+    function resetApp() {
+      Object.keys(cart).forEach(k => delete cart[k]);
+      const screen = $('dispense-screen');
+      screen.classList.add('hidden');
+      screen.classList.remove('flex');
+      fetchProducts();
+    }
+
+    // ── Check Return URL from Mobile Payment Redirect ──
+    async function checkReturnFromPayment() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnedOrderId = urlParams.get('order_id');
+      if (!returnedOrderId) return;
+
+      window.history.replaceState({}, document.title, window.location.pathname);
+      showToast('Memverifikasi status pembayaran...');
+
+      try {
+        const res = await fetch(`/api/payment/check-status/${returnedOrderId}`);
+        const data = await res.json();
+        if (data.settled) {
+          showToast('Pembayaran berhasil dikonfirmasi! 🎉');
+          const returnedItems = (data.transaction && data.transaction.items) || [];
+          startDispensing(returnedItems);
+        } else {
+          showToast('Pembayaran belum selesai atau dibatalkan');
+        }
+      } catch (e) {
+        showToast('Gagal memverifikasi status pembayaran');
+      }
+    }
+
+    // ── Init ──
+    fetchProducts();
+    initMidtrans();
+    checkReturnFromPayment();
+  </script>
+</body>
+</html>
