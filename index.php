@@ -35,103 +35,106 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
         .btn-primary {
             background: var(--navy);
             color: #fff;
-            border-radius: 15px;
-            transition: background .15s, transform .12s, box-shadow .12s;
-            box-shadow: 0 4px 14px rgba(10,22,128,.2);
+            border-radius: 0.625rem;
+            transition: background .15s;
         }
-        .btn-primary:hover { background: #0d1fa0; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(10,22,128,.28); }
-        .btn-primary:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(10,22,128,.18); }
-        .card { background: #fff; border: 1px solid rgba(147,178,248,.35); border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(10,22,128,.06); transition: box-shadow .15s, transform .12s; }
-        .card:hover { box-shadow: 0 8px 24px rgba(10,22,128,.1); transform: translateY(-2px); }
-        .badge-slot { background: rgba(147,178,248,.2); color: var(--navy); border: 1px solid rgba(147,178,248,.5); border-radius: 9px; }
-        .tag-stock-low { color: #c05200; background: rgba(241,185,76,.15); border-radius: 10px; padding: 2px 8px; }
-        .tag-stock-ok  { color: #555; }
+        .btn-primary:hover { background: #1424a8; }
+        .btn-primary:active { background: #070f5c; }
+        .card { background: #fff; border: 1.5px solid rgba(147,178,248,.45); border-radius: 0.875rem; }
+        .badge-slot { background: var(--butter); color: var(--navy); border: 1px solid var(--gold); border-radius: 0.375rem; }
+        .tag-stock-low { color: #9a3412; background: var(--butter); border-radius: 0.375rem; padding: 2px 7px; }
+        .tag-stock-ok  { color: #475569; }
         .loading-bar-fill { background: var(--gold); }
     </style>
 </head>
-<body class="min-h-screen pb-12" style="background:var(--canvas)">
-    <!-- Header -->
-    <header class="sticky top-0 z-40 px-4 py-3" style="background:rgba(252,253,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(147,178,248,.3);box-shadow:0 2px 12px rgba(10,22,128,.06)">
-        <div class="max-w-5xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <img src="./assets/logo.png" alt="TI Chill Logo" class="h-10 w-10 object-contain">
+<body class="min-h-screen flex flex-col justify-between" style="background:var(--canvas)">
+    <div>
+        <!-- Header -->
+        <header class="sticky top-0 z-40 px-4 py-3" style="background:var(--canvas);border-bottom:1.5px solid rgba(147,178,248,.4)">
+            <div class="max-w-5xl mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <img src="./assets/logo.png" alt="TI Chill Logo" class="h-9 w-9 object-contain">
+                    <span class="text-base font-extrabold tracking-tight" style="color:var(--navy)">TI-Chill</span>
+                </div>
+                <span class="text-xs font-semibold" style="color:#475569">Vending Machine Mandiri</span>
+            </div>
+        </header>
+
+        <main class="max-w-5xl mx-auto px-4 mt-6">
+            <!-- Section Header -->
+            <div class="mb-5 pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2" style="border-bottom:1px solid rgba(147,178,248,.35)">
                 <div>
-                    <h1 class="text-base font-extrabold tracking-tight" style="color:var(--navy)">Vending Machine TI-Chill</h1>
+                    <h1 class="text-xl font-extrabold tracking-tight" style="color:var(--navy)">Pilih Minuman</h1>
+                    <p class="text-xs mt-0.5" style="color:#475569">Klik Beli, selesaikan pembayaran, dan ambil minuman di wadah bawah mesin.</p>
                 </div>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md self-start sm:self-auto" style="background:var(--butter);color:var(--navy)">
+                    <span class="h-2 w-2 rounded-full" style="background:#16a34a"></span>
+                    4 Slot Tersedia · QRIS & E-Wallet
+                </span>
             </div>
-            <a href="admin/index.php" class="text-xs font-semibold px-4 py-1.5 rounded-full transition" style="border:1.5px solid var(--sky);color:var(--navy);background:rgba(147,178,248,.12)">
-                Admin
-            </a>
-        </div>
-    </header>
 
-    <main class="max-w-5xl mx-auto px-4 mt-7">
-        <!-- Hero banner -->
-        <div class="rounded-2xl p-5 mb-7 flex items-center justify-between gap-4" style="background:linear-gradient(135deg,var(--navy) 0%,#1a2fa8 100%)">
-            <div>
-                <h2 class="text-lg font-extrabold text-white leading-tight">Pilih Minuman Anda </h2>
-                <p class="text-xs mt-1" style="color:rgba(255,255,255,.75)">Bayar menggunakan QRIS / e-wallet</p>
-            </div>
-            <span class="text-4xl select-none shrink-0">🥤</span>
-        </div>
-
-        <!-- Grid 4 Slot Produk: 4 col desktop, 2 col mobile -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <?php foreach ($products as $p): ?>
-                <?php $isOutOfStock = ($p['stock'] <= 0); ?>
-                <div class="card overflow-hidden flex flex-col <?= $isOutOfStock ? 'opacity-70' : '' ?>">
-                    <div class="relative">
-                        <img src="<?= htmlspecialchars($p['image_url'] ?: 'https://placehold.co/300x180/fbedb0/0a1680?text=Minuman') ?>"
-                             alt="<?= htmlspecialchars($p['name']) ?>"
-                             class="w-full h-36 object-cover" style="background:var(--butter)">
-                        <span class="badge-slot absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5">
-                            Slot <?= $p['slot_number'] ?>
-                        </span>
-                        <?php if ($isOutOfStock): ?>
-                            <div class="absolute inset-0 flex items-center justify-center" style="background:rgba(252,253,255,.82);backdrop-filter:blur(2px)">
-                                <span class="text-xs font-extrabold px-3 py-1 rounded-full" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5">HABIS</span>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="p-3.5 flex flex-col flex-grow justify-between">
-                        <div>
-                            <h3 class="font-bold text-sm line-clamp-1" style="color:var(--navy)"><?= htmlspecialchars($p['name']) ?></h3>
-                            <p class="text-base font-extrabold mt-0.5" style="color:var(--gold)">
-                                Rp <?= number_format($p['price'], 0, ',', '.') ?>
-                            </p>
-                        </div>
-
-                        <div class="mt-3 pt-2.5 flex items-center justify-between" style="border-top:1px solid rgba(147,178,248,.25)">
-                            <span class="text-[11px] font-semibold <?= $p['stock'] > 3 ? 'tag-stock-ok' : 'tag-stock-low' ?>">
-                                Sisa: <?= $p['stock'] ?>
+            <!-- Grid 4 Slot Produk: 4 col desktop, 2 col mobile -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <?php foreach ($products as $p): ?>
+                    <?php $isOutOfStock = ($p['stock'] <= 0); ?>
+                    <div class="card overflow-hidden flex flex-col <?= $isOutOfStock ? 'opacity-60' : '' ?>">
+                        <div class="relative" style="border-bottom:1px solid rgba(147,178,248,.3)">
+                            <img src="<?= htmlspecialchars($p['image_url'] ?: 'https://placehold.co/300x180/fbedb0/0a1680?text=Slot+' . $p['slot_number']) ?>"
+                                 alt="<?= htmlspecialchars($p['name']) ?>"
+                                 class="w-full h-36 object-contain p-2" style="background:#fff">
+                            <span class="badge-slot absolute top-2.5 left-2.5 text-[11px] font-bold px-2 py-0.5">
+                                Slot <?= $p['slot_number'] ?>
                             </span>
-                            <button
-                                onclick="orderProduct(<?= $p['id'] ?>, '<?= addslashes(htmlspecialchars($p['name'])) ?>')"
-                                <?= $isOutOfStock ? 'disabled' : '' ?>
-                                class="btn-primary text-xs font-bold px-4 py-1.5 <?= $isOutOfStock ? 'opacity-40 cursor-not-allowed' : '' ?>"
-                                <?= $isOutOfStock ? 'style="pointer-events:none"' : '' ?>>
-                                Beli
-                            </button>
+                            <?php if ($isOutOfStock): ?>
+                                <div class="absolute inset-0 flex items-center justify-center" style="background:rgba(252,253,255,.85)">
+                                    <span class="text-xs font-extrabold px-3 py-1 rounded-md" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5">HABIS</span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="p-3.5 flex flex-col flex-grow justify-between">
+                            <div>
+                                <h2 class="font-bold text-sm line-clamp-1" style="color:var(--navy)"><?= htmlspecialchars($p['name']) ?></h2>
+                                <p class="text-base font-extrabold mt-0.5" style="color:var(--navy)">
+                                    Rp <?= number_format($p['price'], 0, ',', '.') ?>
+                                </p>
+                            </div>
+
+                            <div class="mt-3 pt-2.5 flex items-center justify-between" style="border-top:1px solid rgba(147,178,248,.25)">
+                                <span class="text-xs font-semibold <?= $p['stock'] > 3 ? 'tag-stock-ok' : 'tag-stock-low' ?>">
+                                    Stok: <?= $p['stock'] ?>
+                                </span>
+                                <button
+                                    onclick="orderProduct(<?= $p['id'] ?>, '<?= addslashes(htmlspecialchars($p['name'])) ?>')"
+                                    <?= $isOutOfStock ? 'disabled' : '' ?>
+                                    class="btn-primary text-xs font-bold px-4 py-1.5 <?= $isOutOfStock ? 'opacity-40 cursor-not-allowed' : '' ?>"
+                                    <?= $isOutOfStock ? 'style="pointer-events:none"' : '' ?>>
+                                    Beli
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </main>
+                <?php endforeach; ?>
+            </div>
+        </main>
+    </div>
+
+    <footer class="max-w-5xl w-full mx-auto px-4 py-6 mt-10 text-xs flex flex-col sm:flex-row items-center justify-between gap-2" style="border-top:1px solid rgba(147,178,248,.35);color:#64748b">
+        <span>Proyek TI-Chill · Vending Machine Otomatis</span>
+        <span>Pembayaran QRIS via Midtrans</span>
+    </footer>
 
     <!-- Modal Status Pengeluaran Minuman -->
-    <div id="dispenseModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background:rgba(10,22,128,.35);backdrop-filter:blur(6px)">
-        <div class="rounded-3xl p-6 w-full max-w-sm text-center relative" style="background:#fff;border:1px solid rgba(147,178,248,.4);box-shadow:0 16px 48px rgba(10,22,128,.15)">
-            <div id="modalIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl" style="background:rgba(147,178,248,.15)">
-                ⏳
+    <div id="dispenseModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background:rgba(10,22,128,.4)">
+        <div class="rounded-2xl p-6 w-full max-w-sm text-center relative" style="background:#fff;border:1.5px solid var(--sky)">
+            <div id="modalIcon" class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:var(--butter);color:var(--navy)">
             </div>
-            <h3 id="modalTitle" class="text-lg font-bold mb-1" style="color:var(--navy)">Memproses Order...</h3>
-            <p id="modalDesc" class="text-xs leading-relaxed mb-6" style="color:#555">
-                Mohon tunggu sebentar, sistem sedang menghubungi gerbang pembayaran.
+            <h3 id="modalTitle" class="text-base font-extrabold mb-1" style="color:var(--navy)">Memproses Pesanan</h3>
+            <p id="modalDesc" class="text-xs leading-relaxed mb-5" style="color:#475569">
+                Menghubungi gerbang pembayaran...
             </p>
 
-            <div id="loadingBar" class="w-full h-2 rounded-full overflow-hidden mb-4" style="background:rgba(147,178,248,.2)">
+            <div id="loadingBar" class="w-full h-1.5 rounded-full overflow-hidden mb-4" style="background:rgba(147,178,248,.25)">
                 <div class="loading-bar-fill h-full animate-pulse rounded-full w-full"></div>
             </div>
 
@@ -145,8 +148,16 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
         let currentOrderId = null;
         let pollInterval = null;
 
+        const ICONS = {
+            wait: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+            warn: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+            err: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+            gear: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
+            ok: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+        };
+
         async function orderProduct(productId, productName) {
-            showModal('⏳', 'Membuat Pesanan...', 'Menghubungi server untuk memproses pesanan ' + productName + '...');
+            showModal(ICONS.wait, 'Membuat Pesanan...', 'Memproses pesanan ' + productName + '...');
 
             try {
                 const response = await fetch('api/create_order.php', {
@@ -158,51 +169,80 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
                 const data = await response.json();
 
                 if (!data.success) {
-                    showModal('⚠️', 'Gagal', data.error || 'Terjadi kesalahan sistem', true);
+                    showModal(ICONS.warn, 'Gagal Membuat Pesanan', data.error || 'Terjadi kesalahan sistem', true);
                     return;
                 }
 
                 currentOrderId = data.order_id;
-
-                // Tutup modal loading sejenak dan buka Snap Popup
                 hideModal();
 
                 window.snap.pay(data.snap_token, {
-                    onSuccess: function(result) {
+                    onSuccess: function() {
                         handlePaymentSuccess();
                     },
-                    onPending: function(result) {
-                        showModal('⏳', 'Menunggu Pembayaran', 'Selesaikan pembayaran Anda di aplikasi e-wallet / m-banking.', false);
-                        startPollingStatus(currentOrderId);
+                    onPending: function() {
+                        checkOrCancelOrder(currentOrderId);
                     },
-                    onError: function(result) {
-                        showModal('❌', 'Pembayaran Gagal', 'Transaksi dibatalkan atau waktu pembayaran habis.', true);
+                    onError: function() {
+                        showModal(ICONS.err, 'Pembayaran Gagal', 'Transaksi dibatalkan atau waktu pembayaran habis.', true);
                     },
                     onClose: function() {
-                        // Jika ditutup, cek apakah sudah bayar
-                        checkImmediateStatus(currentOrderId);
+                        checkOrCancelOrder(currentOrderId);
                     }
                 });
 
             } catch (err) {
-                showModal('❌', 'Koneksi Error', err.message, true);
+                showModal(ICONS.err, 'Koneksi Gagal', err.message, true);
             }
         }
 
         function handlePaymentSuccess() {
-            showModal('🎉', 'Pembayaran Berhasil!', 'Instruksi dikirim ke mesin. ESP32 sedang memutar servo untuk mengeluarkan minuman Anda...', false);
+            showModal(ICONS.gear, 'Pembayaran Diterima', 'Mengirim perintah ke ESP32 untuk memutar motor slot...', false);
             startPollingStatus(currentOrderId);
         }
 
-        async function checkImmediateStatus(orderId) {
+        async function checkOrCancelOrder(orderId) {
+            if (!orderId) return;
             try {
-                const res = await fetch('api/check_status.php?order_id=' + encodeURIComponent(orderId));
+                const res = await fetch('api/check_status.php?order_id=' + encodeURIComponent(orderId) + '&cancel=1');
                 const data = await res.json();
                 if (data.payment_status === 'PAID') {
                     handlePaymentSuccess();
+                } else {
+                    if (pollInterval) clearInterval(pollInterval);
+                    hideModal();
                 }
-            } catch (e) {}
+            } catch (e) {
+                hideModal();
+            }
         }
+
+        // Auto-resume pengecekan jika kembali dari halaman Midtrans Simulator (?order_id=...)
+        window.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const returnedOrderId = params.get('order_id');
+            if (!returnedOrderId) return;
+
+            currentOrderId = returnedOrderId;
+            window.history.replaceState({}, document.title, window.location.pathname);
+            showModal(ICONS.wait, 'Memeriksa Pembayaran...', 'Mengecek status pembayaran pesanan ' + returnedOrderId + '...', false);
+
+            try {
+                const res = await fetch('api/check_status.php?order_id=' + encodeURIComponent(returnedOrderId));
+                const data = await res.json();
+                if (data.payment_status === 'PAID') {
+                    if (data.dispense_status === 'COMPLETED') {
+                        showModal(ICONS.ok, 'Selesai', 'Minuman dari Slot ' + data.slot_number + ' sudah keluar. Silakan ambil di wadah bawah.', true);
+                    } else {
+                        handlePaymentSuccess();
+                    }
+                } else {
+                    showModal(ICONS.warn, 'Pembayaran Belum Selesai', 'Status pembayaran untuk pesanan ini belum lunas atau dibatalkan.', true);
+                }
+            } catch (e) {
+                showModal(ICONS.err, 'Gagal Mengecek Status', 'Tidak dapat menghubungi server.', true);
+            }
+        });
 
         function startPollingStatus(orderId) {
             if (pollInterval) clearInterval(pollInterval);
@@ -215,10 +255,10 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
                     if (!data.success) return;
 
                     if (data.dispense_status === 'DISPENSING') {
-                        showModal('⚙️', 'Sedang Dikeluarkan...', 'Motor servo di Slot ' + data.slot_number + ' sedang berputar. Minuman Anda akan segera jatuh ke wadah!', false);
+                        showModal(ICONS.gear, 'Mengeluarkan Minuman...', 'Motor Slot ' + data.slot_number + ' sedang berputar.', false);
                     } else if (data.dispense_status === 'COMPLETED') {
                         clearInterval(pollInterval);
-                        showModal('✅', 'Selesai!', 'Minuman Anda telah dikeluarkan di Slot ' + data.slot_number + '. Silakan ambil dan nikmati!', true);
+                        showModal(ICONS.ok, 'Selesai', 'Minuman dari Slot ' + data.slot_number + ' sudah keluar. Silakan ambil di wadah bawah.', true);
                     }
                 } catch (e) {
                     console.error('Polling error:', e);
@@ -226,8 +266,8 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
             }, 2000);
         }
 
-        function showModal(icon, title, desc, showClose = false) {
-            document.getElementById('modalIcon').innerText = icon;
+        function showModal(iconSvg, title, desc, showClose = false) {
+            document.getElementById('modalIcon').innerHTML = iconSvg;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalDesc').innerText = desc;
             

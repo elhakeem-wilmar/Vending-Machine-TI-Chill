@@ -55,6 +55,21 @@ function requestMidtransSnapToken($orderId, $grossAmount, $itemDetails = []) {
             'gross_amount' => (int) $grossAmount,
         ],
         'item_details' => $itemDetails,
+        'enabled_payments' => [
+            'gopay',
+            'shopeepay',
+            'other_qris',
+            'dana',
+            'bca_va',
+            'bni_va',
+            'bri_va',
+            'echannel',
+            'permata_va',
+            'other_va',
+        ],
+        'callbacks' => [
+            'finish' => rtrim(BASE_URL, '/') . '/index.php?order_id=' . urlencode($orderId),
+        ],
     ];
 
     $authHeader = base64_encode(MIDTRANS_SERVER_KEY . ':');
