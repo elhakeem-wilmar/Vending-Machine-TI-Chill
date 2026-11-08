@@ -116,4 +116,3 @@ function checkMidtransTransactionStatus($orderId) {
 
     return json_decode($response, true);
 }
-

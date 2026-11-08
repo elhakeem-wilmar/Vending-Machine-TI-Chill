@@ -19,73 +19,98 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Vending Machine</title>
+    <title>Vending Machine TI-Chill</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="<?= $snapJsUrl ?>" data-client-key="<?= htmlspecialchars(MIDTRANS_CLIENT_KEY) ?>"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        :root {
+            --navy: #0a1680;
+            --sky: #93b2f8;
+            --gold: #f1b94c;
+            --butter: #fbedb0;
+            --canvas: #fcfdff;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--canvas); color: var(--navy); }
+        .btn-primary {
+            background: var(--navy);
+            color: #fff;
+            border-radius: 15px;
+            transition: background .15s, transform .12s, box-shadow .12s;
+            box-shadow: 0 4px 14px rgba(10,22,128,.2);
+        }
+        .btn-primary:hover { background: #0d1fa0; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(10,22,128,.28); }
+        .btn-primary:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(10,22,128,.18); }
+        .card { background: #fff; border: 1px solid rgba(147,178,248,.35); border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(10,22,128,.06); transition: box-shadow .15s, transform .12s; }
+        .card:hover { box-shadow: 0 8px 24px rgba(10,22,128,.1); transform: translateY(-2px); }
+        .badge-slot { background: rgba(147,178,248,.2); color: var(--navy); border: 1px solid rgba(147,178,248,.5); border-radius: 9px; }
+        .tag-stock-low { color: #c05200; background: rgba(241,185,76,.15); border-radius: 10px; padding: 2px 8px; }
+        .tag-stock-ok  { color: #555; }
+        .loading-bar-fill { background: var(--gold); }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-12">
+<body class="min-h-screen pb-12" style="background:var(--canvas)">
     <!-- Header -->
-    <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700/60 sticky top-0 z-40 px-4 py-3 shadow-md">
-        <div class="max-w-md mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl">🥤</span>
+    <header class="sticky top-0 z-40 px-4 py-3" style="background:rgba(252,253,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(147,178,248,.3);box-shadow:0 2px 12px rgba(10,22,128,.06)">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <img src="./assets/logo.png" alt="TI Chill Logo" class="h-10 w-10 object-contain">
                 <div>
-                    <h1 class="text-lg font-bold tracking-tight text-white">Smart Drink Station</h1>
-                    <p class="text-xs text-emerald-400 font-medium">● Mesin Siap & Online</p>
+                    <h1 class="text-base font-extrabold tracking-tight" style="color:var(--navy)">Vending Machine TI-Chill</h1>
                 </div>
             </div>
-            <a href="admin/index.php" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-600 transition">
+            <a href="admin/index.php" class="text-xs font-semibold px-4 py-1.5 rounded-full transition" style="border:1.5px solid var(--sky);color:var(--navy);background:rgba(147,178,248,.12)">
                 Admin
             </a>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 mt-6">
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-4 mb-6 shadow-lg shadow-blue-500/20 text-white">
-            <h2 class="text-lg font-bold">Pilih Minuman Dingin Anda</h2>
-            <p class="text-xs text-blue-100 mt-1">Pembayaran aman dengan QRIS & E-Wallet via Midtrans. Minuman otomatis keluar begitu pembayaran berhasil!</p>
+    <main class="max-w-5xl mx-auto px-4 mt-7">
+        <!-- Hero banner -->
+        <div class="rounded-2xl p-5 mb-7 flex items-center justify-between gap-4" style="background:linear-gradient(135deg,var(--navy) 0%,#1a2fa8 100%)">
+            <div>
+                <h2 class="text-lg font-extrabold text-white leading-tight">Pilih Minuman Anda </h2>
+                <p class="text-xs mt-1" style="color:rgba(255,255,255,.75)">Bayar menggunakan QRIS / e-wallet</p>
+            </div>
+            <span class="text-4xl select-none shrink-0">🥤</span>
         </div>
 
-        <!-- Grid 4 Slot Produk -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- Grid 4 Slot Produk: 4 col desktop, 2 col mobile -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <?php foreach ($products as $p): ?>
                 <?php $isOutOfStock = ($p['stock'] <= 0); ?>
-                <div class="bg-slate-800 border border-slate-700/80 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between transition transform active:scale-98">
+                <div class="card overflow-hidden flex flex-col <?= $isOutOfStock ? 'opacity-70' : '' ?>">
                     <div class="relative">
-                        <img src="<?= htmlspecialchars($p['image_url'] ?: 'https://via.placeholder.com/300x200?text=Minuman') ?>" 
-                             alt="<?= htmlspecialchars($p['name']) ?>" 
-                             class="w-full h-36 object-cover bg-slate-900">
-                        <span class="absolute top-2 left-2 bg-black/70 backdrop-blur text-white text-[10px] font-bold px-2 py-0.5 rounded-full border border-white/20">
+                        <img src="<?= htmlspecialchars($p['image_url'] ?: 'https://placehold.co/300x180/fbedb0/0a1680?text=Minuman') ?>"
+                             alt="<?= htmlspecialchars($p['name']) ?>"
+                             class="w-full h-36 object-cover" style="background:var(--butter)">
+                        <span class="badge-slot absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5">
                             Slot <?= $p['slot_number'] ?>
                         </span>
                         <?php if ($isOutOfStock): ?>
-                            <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px] flex items-center justify-center">
-                                <span class="bg-rose-600 text-white font-bold text-xs px-3 py-1 rounded-full shadow">HABIS</span>
+                            <div class="absolute inset-0 flex items-center justify-center" style="background:rgba(252,253,255,.82);backdrop-filter:blur(2px)">
+                                <span class="text-xs font-extrabold px-3 py-1 rounded-full" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5">HABIS</span>
                             </div>
                         <?php endif; ?>
                     </div>
 
                     <div class="p-3.5 flex flex-col flex-grow justify-between">
                         <div>
-                            <h3 class="font-bold text-sm text-slate-100 line-clamp-1"><?= htmlspecialchars($p['name']) ?></h3>
-                            <p class="text-base font-extrabold text-amber-400 mt-1">
+                            <h3 class="font-bold text-sm line-clamp-1" style="color:var(--navy)"><?= htmlspecialchars($p['name']) ?></h3>
+                            <p class="text-base font-extrabold mt-0.5" style="color:var(--gold)">
                                 Rp <?= number_format($p['price'], 0, ',', '.') ?>
                             </p>
                         </div>
 
-                        <div class="mt-3 pt-2 border-t border-slate-700/60 flex items-center justify-between">
-                            <span class="text-[11px] <?= $p['stock'] > 3 ? 'text-slate-400' : 'text-amber-400 font-semibold' ?>">
+                        <div class="mt-3 pt-2.5 flex items-center justify-between" style="border-top:1px solid rgba(147,178,248,.25)">
+                            <span class="text-[11px] font-semibold <?= $p['stock'] > 3 ? 'tag-stock-ok' : 'tag-stock-low' ?>">
                                 Sisa: <?= $p['stock'] ?>
                             </span>
-
-                            <button 
+                            <button
                                 onclick="orderProduct(<?= $p['id'] ?>, '<?= addslashes(htmlspecialchars($p['name'])) ?>')"
                                 <?= $isOutOfStock ? 'disabled' : '' ?>
-                                class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center <?= $isOutOfStock ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white shadow-md shadow-blue-600/30' ?>">
+                                class="btn-primary text-xs font-bold px-4 py-1.5 <?= $isOutOfStock ? 'opacity-40 cursor-not-allowed' : '' ?>"
+                                <?= $isOutOfStock ? 'style="pointer-events:none"' : '' ?>>
                                 Beli
                             </button>
                         </div>
@@ -96,21 +121,21 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
     </main>
 
     <!-- Modal Status Pengeluaran Minuman -->
-    <div id="dispenseModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl relative">
-            <div id="modalIcon" class="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+    <div id="dispenseModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background:rgba(10,22,128,.35);backdrop-filter:blur(6px)">
+        <div class="rounded-3xl p-6 w-full max-w-sm text-center relative" style="background:#fff;border:1px solid rgba(147,178,248,.4);box-shadow:0 16px 48px rgba(10,22,128,.15)">
+            <div id="modalIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl" style="background:rgba(147,178,248,.15)">
                 ⏳
             </div>
-            <h3 id="modalTitle" class="text-lg font-bold text-white mb-1">Memproses Order...</h3>
-            <p id="modalDesc" class="text-xs text-slate-300 leading-relaxed mb-6">
+            <h3 id="modalTitle" class="text-lg font-bold mb-1" style="color:var(--navy)">Memproses Order...</h3>
+            <p id="modalDesc" class="text-xs leading-relaxed mb-6" style="color:#555">
                 Mohon tunggu sebentar, sistem sedang menghubungi gerbang pembayaran.
             </p>
 
-            <div id="loadingBar" class="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-4">
-                <div class="bg-blue-500 h-full animate-pulse rounded-full w-full"></div>
+            <div id="loadingBar" class="w-full h-2 rounded-full overflow-hidden mb-4" style="background:rgba(147,178,248,.2)">
+                <div class="loading-bar-fill h-full animate-pulse rounded-full w-full"></div>
             </div>
 
-            <button id="modalCloseBtn" onclick="closeModal()" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold rounded-xl transition hidden">
+            <button id="modalCloseBtn" onclick="closeModal()" class="btn-primary w-full py-2.5 text-xs font-bold hidden">
                 Tutup
             </button>
         </div>
@@ -231,4 +256,3 @@ $snapJsUrl = MIDTRANS_IS_PRODUCTION
     </script>
 </body>
 </html>
-

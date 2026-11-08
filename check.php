@@ -37,4 +37,3 @@ try {
 } catch (Exception $e) {
     echo "<p style='color:red;'>❌ Terjadi error saat query: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
-

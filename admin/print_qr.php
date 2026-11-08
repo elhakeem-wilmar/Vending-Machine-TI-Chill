@@ -33,7 +33,7 @@ $qrCodeApiUrl = "https://quickchart.io/qr?text=" . urlencode($machineUrl) . "&si
 
     <div class="no-print mb-6 flex space-x-3">
         <button onclick="window.print()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl shadow-lg transition">
-            🖨️ Cetak Lembar Stiker
+            🖨️ Cetak Lembar QR
         </button>
         <a href="index.php" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-semibold rounded-xl border border-slate-600 transition">
             ← Kembali ke Dashboard
@@ -45,8 +45,8 @@ $qrCodeApiUrl = "https://quickchart.io/qr?text=" . urlencode($machineUrl) . "&si
         <div class="inline-block bg-blue-50 text-blue-600 p-3 rounded-2xl mb-3 text-3xl">
             🥤
         </div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">SMART VENDING</h1>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Cold Drinks Station</p>
+        <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Vending Machine TI-Chill</h1>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Drinks Station</p>
 
         <div class="my-6 p-4 bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl flex justify-center">
             <img src="<?= $qrCodeApiUrl ?>" alt="QR Code Mesin" class="w-64 h-64 object-contain">
@@ -76,4 +76,3 @@ $qrCodeApiUrl = "https://quickchart.io/qr?text=" . urlencode($machineUrl) . "&si
 
 </body>
 </html>
-
