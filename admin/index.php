@@ -79,6 +79,7 @@ if (!$isLoggedIn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Administrator</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -153,7 +154,8 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Smart Vending Machine</title>
+    <title>Admin Dashboard - Vending Machine TI-Chill</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -164,32 +166,37 @@ try {
         .input-field:focus { outline:none; border-color:var(--navy); }
         .btn-navy { background:var(--navy); color:#fff; border-radius:.5rem; transition:background .15s; }
         .btn-navy:hover { background:#1424a8; }
-        .btn-gold { background:var(--gold); color:var(--navy); border-radius:.5rem; font-weight:700; transition:filter .15s; }
+        .btn-gold { background:var(--gold); color:var(--navy); border:1.5px solid var(--gold); border-radius:.5rem; font-weight:700; transition:filter .15s; }
         .btn-gold:hover { filter:brightness(.95); }
-        .badge-slot { background:var(--butter); color:var(--navy); border:1px solid var(--gold); border-radius:.375rem; font-weight:700; font-size:.7rem; padding:.15rem .5rem; }
+        .btn-wa { background:var(--gold); color:var(--navy); border:1.5px solid var(--gold); border-radius:.5rem; transition:filter .15s; }
+        .btn-wa:hover { filter:brightness(.95); }
+        .btn-ig { background:rgba(252,253,255,.08); color:var(--canvas); border:1.5px solid rgba(147,178,248,.45); border-radius:.5rem; transition:background .15s, border-color .15s; }
+        .btn-ig:hover { background:rgba(252,253,255,.16); border-color:var(--sky); }
+        .badge-slot { background:var(--butter); color:var(--navy); border:1px solid var(--gold); border-radius:.375rem; font-weight:700; font-size:.7rem; padding:.15rem .5rem; display:inline-block; white-space:nowrap; }
     </style>
 </head>
-<body class="min-h-screen pb-12">
+<body class="min-h-screen flex flex-col justify-between">
+    <div>
     <!-- Navbar -->
-    <header class="sticky top-0 z-40 px-4 sm:px-6 py-3" style="background:var(--canvas);border-bottom:1.5px solid rgba(147,178,248,.4)">
-        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+    <header class="sticky top-0 z-40 px-4 sm:px-6 py-3" style="background:#fff;border-top:3px solid var(--navy);border-bottom:1.5px solid rgba(147,178,248,.4)">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
             <div class="flex items-center gap-2.5">
-                <img src="../assets/logo.png" alt="TI Chill" class="h-9 w-9 object-contain">
+                <img src="../assets/logo.png" alt="TI Chill" class="h-9 w-9 object-contain shrink-0">
                 <div>
                     <h1 class="text-base font-extrabold leading-tight" style="color:var(--navy)">Admin TI-Chill</h1>
                     <p class="text-[11px]" style="color:#64748b">Stok, Harga & Riwayat Pesanan</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <a href="print_qr.php" target="_blank" class="btn-gold text-xs px-3.5 py-1.5 inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+            <div class="w-full sm:w-auto flex items-center justify-between gap-1.5 sm:gap-2">
+                <a href="print_qr.php" target="_blank" class="btn-gold flex-auto sm:flex-initial text-[11px] sm:text-xs px-2 sm:px-3.5 py-1.5 inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
                     Cetak QR
                 </a>
-                <a href="../index.php" target="_blank" class="text-xs font-semibold px-3.5 py-1.5 rounded-lg transition inline-flex items-center gap-1.5" style="border:1.5px solid var(--sky);color:var(--navy);background:#fff">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>
+                <a href="../index.php" target="_blank" class="flex-auto sm:flex-initial text-[11px] sm:text-xs font-semibold px-2 sm:px-3.5 py-1.5 rounded-lg transition inline-flex items-center justify-center gap-1.5 whitespace-nowrap" style="border:1.5px solid var(--sky);color:var(--navy);background:#fff">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>
                     Halaman Pembeli
                 </a>
-                <a href="logout.php" class="text-xs font-semibold px-3.5 py-1.5 rounded-lg text-white" style="background:#dc2626">
+                <a href="logout.php" class="flex-auto sm:flex-initial text-[11px] sm:text-xs font-semibold px-2 sm:px-3.5 py-1.5 rounded-lg text-white inline-flex items-center justify-center whitespace-nowrap" style="background:#dc2626;border:1.5px solid #dc2626">
                     Keluar
                 </a>
             </div>
@@ -279,7 +286,7 @@ try {
                         <input type="hidden" name="slot_number" value="<?= $p['slot_number'] ?>">
                         <button type="submit" onclick="return confirm('Uji coba putar servo Slot <?= $p['slot_number'] ?>?')"
                                 class="w-full py-1.5 text-[11px] font-bold rounded-lg transition" style="background:var(--butter);color:var(--navy);border:1px solid var(--gold)">
-                            Test Putar Servo
+                            Tes Putar Servo
                         </button>
                     </form>
                 </div>
@@ -287,20 +294,68 @@ try {
         </div>
 
         <!-- Riwayat Transaksi -->
+        <?php
+        function renderPayBadge($status) {
+            if ($status === 'PAID') {
+                return '<span class="text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap" style="background:#dcfce7;color:#15803d;border:1px solid #86efac">PAID</span>';
+            }
+            if ($status === 'PENDING') {
+                return '<span class="text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap" style="background:var(--butter);color:#9a3412;border:1px solid var(--gold)">PENDING</span>';
+            }
+            $label = ($status === 'EXPIRED') ? 'EXPIRED' : 'CANCEL';
+            return '<span class="text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5">' . $label . '</span>';
+        }
+
+        function renderDispenseText($status) {
+            if ($status === 'COMPLETED') return '<span class="font-bold" style="color:#15803d">Selesai</span>';
+            if ($status === 'DISPENSING') return '<span class="font-bold" style="color:var(--navy)">Memutar Servo...</span>';
+            if ($status === 'READY_TO_DISPENSE') return '<span class="font-bold" style="color:#b45309">Antri ESP32</span>';
+            if ($status === 'WAITING_PAYMENT') return '<span style="color:#94a3b8">Menunggu Bayar</span>';
+            return '<span style="color:#94a3b8">Dibatalkan</span>';
+        }
+        ?>
         <h2 class="text-base font-extrabold mb-3" style="color:var(--navy)">Riwayat Transaksi Terakhir</h2>
 
         <div class="card overflow-hidden">
-            <div class="overflow-x-auto">
+            <!-- Tampilan Kartu Ringkas (Khusus Mobile) -->
+            <div class="md:hidden">
+                <?php if (empty($orders)): ?>
+                    <p class="py-6 text-center text-xs" style="color:#94a3b8">Belum ada transaksi tercatat</p>
+                <?php else: ?>
+                    <?php foreach ($orders as $idx => $o): ?>
+                        <div class="p-3.5 space-y-2" <?= $idx > 0 ? 'style="border-top:1px solid rgba(147,178,248,.28)"' : '' ?>>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="badge-slot shrink-0">Slot <?= $o['slot_number'] ?></span>
+                                    <span class="font-bold text-xs truncate" style="color:var(--navy)"><?= htmlspecialchars($o['product_name'] ?? 'Test Manual') ?></span>
+                                </div>
+                                <?= renderPayBadge($o['payment_status']) ?>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 text-xs">
+                                <span class="font-extrabold" style="color:var(--navy)">Rp <?= number_format($o['amount'], 0, ',', '.') ?></span>
+                                <?= renderDispenseText($o['dispense_status']) ?>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 text-[11px] pt-1.5" style="border-top:1px dashed rgba(147,178,248,.3);color:#64748b">
+                                <span class="font-mono truncate"><?= htmlspecialchars($o['order_id']) ?></span>
+                                <span class="shrink-0"><?= htmlspecialchars($o['created_at']) ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tampilan Tabel (Desktop & Tablet) -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left text-xs">
                     <thead style="background:rgba(147,178,248,.12);border-bottom:1.5px solid rgba(147,178,248,.35)">
                         <tr>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Order ID</th>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Produk</th>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Slot</th>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Nominal</th>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Status Bayar</th>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Status Dispenser</th>
-                            <th class="py-3 px-4 font-bold" style="color:var(--navy)">Waktu</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Order ID</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Produk</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Slot</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Nominal</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Status Bayar</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Status Dispenser</th>
+                            <th class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Waktu</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -311,33 +366,15 @@ try {
                         <?php else: ?>
                             <?php foreach ($orders as $o): ?>
                                 <tr style="border-top:1px solid rgba(147,178,248,.2)">
-                                    <td class="py-3 px-4 font-mono" style="color:#475569"><?= htmlspecialchars($o['order_id']) ?></td>
+                                    <td class="py-3 px-4 font-mono whitespace-nowrap" style="color:#475569"><?= htmlspecialchars($o['order_id']) ?></td>
                                     <td class="py-3 px-4 font-semibold" style="color:var(--navy)"><?= htmlspecialchars($o['product_name'] ?? 'Test Manual') ?></td>
-                                    <td class="py-3 px-4">
+                                    <td class="py-3 px-4 whitespace-nowrap">
                                         <span class="badge-slot">Slot <?= $o['slot_number'] ?></span>
                                     </td>
-                                    <td class="py-3 px-4 font-bold" style="color:var(--navy)">Rp <?= number_format($o['amount'], 0, ',', '.') ?></td>
-                                    <td class="py-3 px-4">
-                                        <?php if ($o['payment_status'] === 'PAID'): ?>
-                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded" style="background:#dcfce7;color:#15803d;border:1px solid #86efac">PAID</span>
-                                        <?php elseif ($o['payment_status'] === 'PENDING'): ?>
-                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded" style="background:var(--butter);color:#9a3412;border:1px solid var(--gold)">PENDING</span>
-                                        <?php else: ?>
-                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5"><?= htmlspecialchars($o['payment_status']) ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-3 px-4">
-                                        <?php if ($o['dispense_status'] === 'COMPLETED'): ?>
-                                            <span class="font-bold" style="color:#15803d">Selesai</span>
-                                        <?php elseif ($o['dispense_status'] === 'DISPENSING'): ?>
-                                            <span class="font-bold" style="color:var(--navy)">Memutar Servo...</span>
-                                        <?php elseif ($o['dispense_status'] === 'READY_TO_DISPENSE'): ?>
-                                            <span class="font-bold" style="color:#b45309">Antre ESP32</span>
-                                        <?php else: ?>
-                                            <span style="color:#94a3b8"><?= htmlspecialchars($o['dispense_status']) ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-3 px-4" style="color:#64748b"><?= htmlspecialchars($o['created_at']) ?></td>
+                                    <td class="py-3 px-4 font-bold whitespace-nowrap" style="color:var(--navy)">Rp <?= number_format($o['amount'], 0, ',', '.') ?></td>
+                                    <td class="py-3 px-4 whitespace-nowrap"><?= renderPayBadge($o['payment_status']) ?></td>
+                                    <td class="py-3 px-4 whitespace-nowrap"><?= renderDispenseText($o['dispense_status']) ?></td>
+                                    <td class="py-3 px-4 whitespace-nowrap" style="color:#64748b"><?= htmlspecialchars($o['created_at']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -346,5 +383,32 @@ try {
             </div>
         </div>
     </main>
+    </div>
+
+    <footer class="w-full mt-14" style="background:var(--navy);color:var(--canvas);border-top:3px solid var(--gold)">
+        <div class="max-w-6xl mx-auto px-4 py-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-5" style="border-bottom:1px solid rgba(147,178,248,.22)">
+                <img src="../assets/logo.png" alt="TI-Chill Logo" class="h-12 w-12 object-contain rounded-xl p-1.5 shrink-0" style="background:var(--canvas)">
+
+                <div class="w-full sm:w-auto grid grid-cols-2 sm:flex items-center gap-2.5">
+                    <a href="https://wa.me/6281266906714" target="_blank" rel="noopener noreferrer" class="btn-wa text-xs font-bold px-3.5 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
+                        <span>+62 812-6690-6714</span>
+                    </a>
+                    <a href="https://www.instagram.com/ti.chill._?vrfl=bnZqMWNlcXlmZDJ5" target="_blank" rel="noopener noreferrer" class="btn-ig text-xs font-bold px-3.5 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                        <span>@ti.chill._</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-center sm:text-left" style="color:rgba(252,253,255,.65)">
+                <span>&copy; <?= date('Y') ?> Kelas TI-Chill &middot; Pembayaran diproses melalui Midtrans</span>
+                <button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="sm:hidden inline-flex items-center gap-1 font-semibold px-3.5 py-1 rounded-full" style="background:rgba(252,253,255,.1);color:var(--butter);border:1px solid rgba(251,237,176,.3)">
+                    &uarr; Kembali ke atas
+                </button>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

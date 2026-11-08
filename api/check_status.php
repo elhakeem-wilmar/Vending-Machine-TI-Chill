@@ -55,19 +55,20 @@ if ($order['payment_status'] === 'PENDING') {
             $order['payment_status'] = 'PAID';
             $order['dispense_status'] = 'READY_TO_DISPENSE';
         } elseif (in_array($trxStatus, ['expire', 'cancel', 'deny'], true)) {
-            $update = $pdo->prepare("UPDATE orders SET payment_status = 'FAILED', dispense_status = 'CANCELLED' WHERE id = ?");
-            $update->execute([$order['id']]);
-            $order['payment_status'] = 'FAILED';
-            $order['dispense_status'] = 'CANCELLED';
+            $newPay = ($trxStatus === 'expire') ? 'EXPIRED' : 'FAILED';
+            $update = $pdo->prepare("UPDATE orders SET payment_status = ?, dispense_status = 'FAILED' WHERE id = ?");
+            $update->execute([$newPay, $order['id']]);
+            $order['payment_status'] = $newPay;
+            $order['dispense_status'] = 'FAILED';
         }
     }
 }
 
 if (isset($_GET['cancel']) && $_GET['cancel'] === '1' && $order['payment_status'] === 'PENDING') {
-    $update = $pdo->prepare("UPDATE orders SET payment_status = 'CANCELLED', dispense_status = 'CANCELLED' WHERE id = ?");
+    $update = $pdo->prepare("UPDATE orders SET payment_status = 'FAILED', dispense_status = 'FAILED' WHERE id = ?");
     $update->execute([$order['id']]);
-    $order['payment_status'] = 'CANCELLED';
-    $order['dispense_status'] = 'CANCELLED';
+    $order['payment_status'] = 'FAILED';
+    $order['dispense_status'] = 'FAILED';
 }
 
 jsonResponse([
